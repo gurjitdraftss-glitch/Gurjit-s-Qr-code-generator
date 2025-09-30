@@ -2,30 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QR Code That Works Forever</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,700,800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-bg: #0e0e0e;
+      --card-bg: #161616;
+      --accent: #43e97b;
+      --white: #fff;
+      --gray: #bbb;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--primary-bg);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+
+    nav {
+      background: var(--card-bg);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    }
+    .nav-title {
+      font-weight: 800;
+      font-size: 1.7rem;
+      letter-spacing: -1px;
+      color: var(--accent);
+    }
+    .nav-menu {
+      display: flex;
+      gap: 32px;
+    }
+    .nav-menu a {
+      color: var(--white);
+      font-weight: 500;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: color 0.25s;
+      padding: 8px 14px;
+      border-radius: 6px;
+    }
+    .nav-menu a:hover, .nav-menu a.active {
+      background: var(--accent);
+      color: var(--primary-bg);
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        gap: 14px;
+        padding: 16px 10px;
+      }
+      .nav-title {
+        font-size: 1.1rem;
+      }
+      .nav-menu {
+        gap: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header class="navbar">
-    <div class="container nav-content">
-      <div class="logo">ForeverQR</div>
-      <nav class="nav-links">
-        <a href="#generator">Generate</a>
-        <a href="#reader">Scan</a>
-        <a href="#faq">FAQ</a>
-        <a href="#about">Why Us</a>
-      </nav>
+  <nav>
+    <div class="nav-title">QR Code That Works Forever</div>
+    <div class="nav-menu">
+      <a href="#" class="active">Generator</a>
+      <a href="#">Reader</a>
+      <a href="#">Customize</a>
+      <a href="#">FAQ</a>
+      <a href="#">About</a>
     </div>
-  </header>
-
-  <section class="hero">
-    <div class="container hero-content">
-      <h1><span>ForeverQR:</span> QR Codes That Never Expire</h1>
-      <p>Create permanent, customizable QR codes. Scan, track, and never worry about broken links again.</p>
-      <a href="#generator" class="cta-btn">Get Started</a>
-    </div>
-  </section>
+  </nav>
+  <!-- Main content will go here -->
 </body>
 </html>
