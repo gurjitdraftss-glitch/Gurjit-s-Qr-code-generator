@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QR Code That Works Forever</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,700,800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     :root {
       --primary-bg: #0e0e0e;
@@ -59,6 +60,124 @@
       color: var(--primary-bg);
     }
 
+    .container {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      margin: 40px auto 0 auto;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--accent);
+    }
+    .input-group label {
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      display: block;
+      font-weight: 500;
+      color: var(--gray);
+    }
+    .input-group input[type="text"], .input-group input[type="url"], .input-group input[type="number"] {
+      width: 100%;
+      padding: 12px 16px;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 10px;
+      font-size: 1rem;
+      color: var(--white);
+      margin-bottom: 12px;
+      transition: border-color 0.3s;
+    }
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .size-group {
+      display: flex;
+      gap: 10px;
+    }
+    .color-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .color-group .input-group {
+      flex: 1;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      background: var(--accent);
+      color: var(--primary-bg);
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #38f9d7;
+    }
+    .download-btn {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      color: var(--primary-bg);
+      display: none;
+      margin-top: 0;
+    }
+    #qrcode {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 150px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .empty-state {
+      color: #777;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+    .faq-section {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 800px;
+      width: 100%;
+      margin: 40px auto 0 auto;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    }
+    .faq-section h2 {
+      color: var(--accent);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .faq-block {
+      margin-bottom: 20px;
+    }
+    .faq-block h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    .faq-block p {
+      color: var(--gray);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
     @media (max-width: 600px) {
       nav {
         flex-direction: column;
@@ -71,105 +190,26 @@
       .nav-menu {
         gap: 14px;
       }
+      .container {
+        padding: 18px;
+        margin: 18px 0 0 0;
+      }
+      h1 {
+        font-size: 1.3rem;
+      }
+      .size-group {
+        flex-direction: column;
+        gap: 0;
+      }
+      .color-group {
+        flex-direction: column;
+        gap: 0;
+      }
+      .faq-section {
+        padding: 15px 8px;
+      }
     }
   </style>
-  <style>.container {
-  background: var(--card-bg);
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 500px;
-  width: 100%;
-  margin: 40px auto 0 auto;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-}
-
-h1 {
-  font-size: 2rem;
-  text-align: center;
-  margin-bottom: 30px;
-  font-weight: 800;
-  letter-spacing: -1px;
-  color: var(--accent);
-}
-
-.input-group label {
-  font-size: 0.95rem;
-  margin-bottom: 8px;
-  display: block;
-  font-weight: 500;
-  color: var(--gray);
-}
-.input-group input[type="text"], .input-group input[type="url"], .input-group input[type="number"] {
-  width: 100%;
-  padding: 12px 16px;
-  background: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 10px;
-  font-size: 1rem;
-  color: var(--white);
-  margin-bottom: 12px;
-  transition: border-color 0.3s;
-}
-.input-group input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-.size-group {
-  display: flex;
-  gap: 10px;
-}
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 10px;
-  background: var(--accent);
-  color: var(--primary-bg);
-  font-weight: 700;
-  font-size: 1rem;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-button:hover {
-  background: #38f9d7;
-}
-.download-btn {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  color: var(--primary-bg);
-  display: none;
-  margin-top: 0;
-}
-#qrcode {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 150px;
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 20px;
-}
-.empty-state {
-  color: #777;
-  text-align: center;
-  font-size: 0.95rem;
-}
-@media (max-width: 600px) {
-  .container {
-    padding: 18px;
-    margin: 18px 0 0 0;
-  }
-  h1 {
-    font-size: 1.3rem;
-  }
-  .size-group {
-    flex-direction: column;
-    gap: 0;
-  }
-}
-</style>
 </head>
 <body>
   <nav>
@@ -182,6 +222,124 @@ button:hover {
       <a href="#">About</a>
     </div>
   </nav>
-  <!-- Main content will go here -->
+
+  <div class="container">
+    <h1>Generate Your QR Code</h1>
+    <div class="input-group">
+      <label for="text">Enter Text or URL:</label>
+      <input type="text" id="text" placeholder="https://example.com or any text">
+    </div>
+    <div class="size-group">
+      <div class="input-group">
+        <label for="width">Width (px):</label>
+        <input type="number" id="width" value="256" min="100" max="500">
+      </div>
+      <div class="input-group">
+        <label for="height">Height (px):</label>
+        <input type="number" id="height" value="256" min="100" max="500">
+      </div>
+    </div>
+    <div class="color-group">
+      <div class="input-group">
+        <label for="colorDark">QR Color:</label>
+        <input type="color" id="colorDark" value="#ffffff">
+      </div>
+      <div class="input-group">
+        <label for="colorLight">Background:</label>
+        <input type="color" id="colorLight" value="#0e0e0e">
+      </div>
+    </div>
+    <button id="generateBtn">Generate QR Code</button>
+    <div id="qrcode">
+      <div class="empty-state">Your QR code will appear here</div>
+    </div>
+    <button class="download-btn" id="downloadBtn" style="display:none;">Download QR Code</button>
+  </div>
+
+  <div class="faq-section">
+    <h2>FAQ & QR Code Longevity</h2>
+
+    <div class="faq-block">
+      <h3>Why do some QR codes stop working?</h3>
+      <p>
+        Some QR codes (especially those generated by paid services or for URLs that change or expire) become invalid because the destination is deleted, the code is part of a short-lived campaign, or the provider removes hosting. Dynamic QR codes can also expire if the owner revokes, deletes, or stops paying for the link[web:5].
+      </p>
+    </div>
+
+    <div class="faq-block">
+      <h3>Why will this QR code work forever?</h3>
+      <p>
+        A QR code generated here is "static": it encodes the actual text or URL right into the image—no external service is required to keep it working. As long as the encoded text or URL exists, the QR will always function. It is not dependent on a paid provider or external redirection[web:4][web:5].
+      </p>
+    </div>
+
+    <div class="faq-block">
+      <h3>How secure is my data?</h3>
+      <p>
+        All QR codes are generated locally in the browser, and no data is sent to a server. You have full control over what is encoded and how it is distributed.
+      </p>
+    </div>
+
+    <div class="faq-block">
+      <h3>What else can QR codes store?</h3>
+      <p>
+        QR codes can store URLs, plain text, email addresses, phone numbers, Wi-Fi credentials, and even vCards for contact sharing[web:3][web:4].
+      </p>
+    </div>
+  </div>
+
+  <!-- Future Section: Reader & More Customization Features -->
+
+  <script>
+    let qrcode = null;
+
+    function generateQR() {
+      const text = document.getElementById('text').value;
+      const width = parseInt(document.getElementById('width').value);
+      const height = parseInt(document.getElementById('height').value);
+      const colorDark = document.getElementById('colorDark').value;
+      const colorLight = document.getElementById('colorLight').value;
+      const qrcodeContainer = document.getElementById('qrcode');
+      const downloadBtn = document.getElementById('downloadBtn');
+
+      if (!text) {
+        alert('Please enter text or URL');
+        return;
+      }
+
+      qrcodeContainer.innerHTML = '';
+
+      qrcode = new QRCode(qrcodeContainer, {
+        text: text,
+        width: width,
+        height: height,
+        colorDark: colorDark,
+        colorLight: colorLight,
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      downloadBtn.style.display = 'block';
+    }
+
+    function downloadQR() {
+      const canvas = document.querySelector('#qrcode canvas');
+      if (canvas) {
+        const url = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.download = 'qrcode.png';
+        link.href = url;
+        link.click();
+      }
+    }
+
+    document.getElementById('generateBtn').onclick = generateQR;
+    document.getElementById('downloadBtn').onclick = downloadQR;
+
+    document.getElementById('text').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        generateQR();
+      }
+    });
+  </script>
 </body>
 </html>
