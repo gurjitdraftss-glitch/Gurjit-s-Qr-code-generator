@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Minimal QR Code Forever</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='32' height='32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='32' height='32' rx='8' fill='%230e0e0e'/%3E%3Crect x='5' y='5' width='8' height='8' rx='2' fill='%2343e97b'/%3E%3Crect x='19' y='5' width='8' height='8' rx='2' fill='%2343e97b'/%3E%3C/svg%3E" />
-  <!-- Inter font for premium minimalism -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <!-- FontAwesome 6 for minimal icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
   <style>
   :root {
     --bg: #111114;
@@ -20,78 +18,116 @@
     --font: 'Inter', system-ui, Arial, sans-serif;
     --text: #F3F5FA;
   }
-  html, body { height: 100%; margin: 0; padding: 0; }
-  body {
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font);
     background: var(--bg);
     color: var(--text);
-    font-family: var(--font);
-    min-height: 100vh;
   }
-  .main-wrap {
+  body {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 0;
-    max-width: 910px;
-    margin: 32px auto;
-    background: none;
-    border-radius: 30px;
-    box-shadow: none;
+    place-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+    box-sizing: border-box;
   }
-  @media(max-width: 900px) {
-    .main-wrap { grid-template-columns: 1fr; margin: 6px; }
-  }
-  .side-panel {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 26px;
-    background: none;
-    padding: 0 18px 0 0;
-    border-radius: 0;
-  }
-  .qr-panel {
+  
+  /* --- NEW COMPACT LAYOUT --- */
+  .app-container {
+    width: 100%;
+    max-width: 860px;
     background: var(--panel);
-    border-radius: 26px;
-    box-shadow: 0 4px 16px rgba(34,36,50,0.14);
-    padding: 3vh 3vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 320px;
-    max-width: 420px;
-    margin: 0 auto;
-    height: fit-content;
+    border-radius: 28px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    box-sizing: border-box;
   }
-  @media(max-width: 900px) {
-    .qr-panel { min-width: unset; max-width: 92vw; margin: 24px auto 0 auto; }
-    .side-panel { padding: 0; }
+
+  .app-header {
+    text-align: left;
+    margin-bottom: 1.5rem;
   }
+  
   h1 {
-    font-size: 2.1rem;
+    font-size: 2rem;
     font-weight: 800;
     color: var(--accent);
-    margin-bottom: 12px;
+    margin: 0 0 8px 0;
     letter-spacing: -1.5px;
   }
+
+  .minimal-tip {
+    font-size: .9rem;
+    color: #888;
+    font-weight: 500;
+    border-left: 3px solid var(--accent);
+    padding-left: 13px;
+    margin: 0;
+  }
+
+  .core-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .controls-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .output-panel {
+    background: #111114;
+    border-radius: 18px;
+    padding: 20px;
+    display: grid;
+    place-items: center;
+    align-self: stretch; /* Make panel fill grid cell height */
+    min-height: 250px;
+  }
+
+  #qrcode {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+  }
+
+  #qrcode > canvas, #qrcode > svg {
+    max-width: 100%;
+    height: auto !important;
+  }
+  
+  .empty-state {
+    color: #666;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  /* --- CONTROL STYLES --- */
   .control-bar {
     display: flex;
     gap: 10px;
     align-items: center;
-    margin-bottom: 24px;
-    margin-top: 5px;
+    width: 100%;
   }
   .control-bar input[type="text"] {
     flex: 1;
-    font-size: 1.22rem;
-    font-weight: 700;
-    padding: 14px 20px;
-    border: none;
-    border-radius: 7px;
-    background: var(--panel);
-    color: var(--text);
-    box-shadow: 0 2px 8px #16171c23;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 16px;
     border: 1.5px solid var(--border);
+    border-radius: 7px;
+    background: #111114;
+    color: var(--text);
     outline: none;
+    min-width: 0;
   }
   .control-bar input[type="text"]:focus {
     border-color: var(--accent);
@@ -101,90 +137,102 @@
     border: none;
     color: var(--icon);
     padding: 0 10px;
-    font-size: 1.45rem;
+    font-size: 1.3rem;
     cursor: pointer;
-    transition: color 0.19s;
+    transition: color 0.2s, transform 0.2s;
   }
-  .icon-btn.active, .icon-btn:hover, .icon-btn:focus {
+  .icon-btn:hover {
     color: var(--accent);
+    transform: scale(1.1);
   }
+
   .opt-row {
     display: flex;
     gap: 14px;
     align-items: center;
-    margin: 12px 0 8px 0;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
   .opt-row input {
-    width: 72px;
+    width: 65px;
     font-weight: 600;
-    font-size: 1.13rem;
+    font-size: 1rem;
     padding: 7px 10px;
-    background: var(--panel);
+    background: #111114;
     color: var(--text);
     border: 1.5px solid var(--border);
     border-radius: 6px;
     outline: none;
-    margin-right: 5px;
   }
   .opt-row input[type="color"] { padding: 4px; width: 36px; height: 36px; }
   .opt-row label {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
     color: var(--icon);
-    margin-right: 8px;
     user-select: none;
+    margin-right: -5px;
   }
-  .opt-row label[for="transparent"] {
-    margin-left: 6px;
-  }
-  .download-bar {
+
+  .action-bar {
     display: flex;
-    gap: 22px;
-    align-items: center;
-    justify-content: center;
-    margin-top: 22px;
+    flex-direction: column;
+    gap: 12px;
   }
-  .download-bar .icon-btn {
-    font-size: 1.48rem;
+  .action-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .group-label {
+    font-size: 0.8rem;
+    font-weight: 600;
     color: var(--icon);
-    margin: 0 8px;
+    text-transform: uppercase;
+    width: 80px;
+    text-align: left;
+    flex-shrink: 0;
   }
-  .download-bar .icon-btn:hover { color: var(--accent);}
-  #qrcode {
-    background: #18181b;
-    border-radius: 18px;
-    padding: 20px;
-    margin-top: 20px;
-    box-shadow: 0 2px 8px #16171c27;
-    min-width: 92px;
-    min-height: 92px;
+  .button-container {
     display: flex;
-    justify-content: center;
+    gap: 10px;
+    width: 100%;
+  }
+  .action-btn {
+    background-color: var(--border);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1;
   }
-  .empty-state {
-    color: #666;
-    font-size: 1.06rem;
-    font-weight: 500;
-    padding: 20px 0;
+  .action-btn:hover {
+    background-color: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    transform: translateY(-2px);
   }
-  .minimal-tip {
-    margin: 10px 0 20px 0;
-    font-size: .95rem;
-    color: #888;
-    font-weight: 500;
-    border-left: 3px solid var(--accent);
-    padding-left: 13px;
-  }
+  .action-btn i { font-size: 1.1em; }
+
+  /* --- FAQ STYLES --- */
   .faq-toggle {
     color: var(--accent);
-    font-size: 1rem;
+    font-size: 0.9rem;
     background: none;
     border: none;
     cursor: pointer;
-    margin-top: 15px;
     font-weight: 700;
-    padding-left: 1px;
+    padding: 0;
+    text-align: left;
+    margin-top: 10px;
   }
   .faq-block {
     background: #1a1b1f;
@@ -195,163 +243,188 @@
     box-shadow: 0 2px 13px #23232344;
     display: none;
     z-index: 90;
-    font-size: 1.01rem;
+    font-size: 1rem;
     color: #bcc;
+    border: 1px solid var(--border);
   }
   .faq-block.show { display: block; }
-  .faq-block h3 {
-    color: var(--accent);
-    font-weight: 800;
-    font-size: 1.08rem;
-    margin-bottom: 10px;
+  .faq-block h3 { color: var(--accent); font-weight: 800; font-size: 1.08rem; margin: 0 0 10px 0; }
+  .faq-block .close-faq { position: absolute; top: 13px; right: 18px; background: none; border: none; color: #666; font-size: 1.23rem; cursor: pointer; }
+  
+  /* --- RESPONSIVE DESIGN --- */
+  @media(max-width: 768px) {
+    body { display: block; }
+    .app-container { padding: 1.5rem; margin-top: 1rem; }
+    .core-layout { grid-template-columns: 1fr; }
+    .output-panel { min-height: 280px; }
   }
-  .faq-block .close-faq {
-    position: absolute;
-    top: 13px;
-    right: 18px;
-    background: none;
-    border: none;
-    color: #666;
-    font-size: 1.23rem;
-    cursor: pointer;
+  @media(max-width: 480px) {
+    body { padding: 0.5rem; }
+    .app-container { padding: 1rem; }
+    h1 { font-size: 1.8rem; }
+    .action-group { flex-direction: column; align-items: flex-start; }
+    .button-container { width: 100%; }
+    .group-label { width: auto; margin-bottom: 5px; }
+    .faq-block { left: 50%; transform: translateX(-50%); max-width: 90vw; right: unset; }
   }
-  @media(max-width:600px){
-    .main-wrap { grid-template-columns: 1fr; }
-    .qr-panel { box-shadow: none; border-radius: 18px; padding: 13px 2vw;}
-    .faq-block { left: 5vw; max-width: 97vw; right: unset; }
-  }
+
   </style>
 </head>
 <body>
-<div class="main-wrap">
-  <div class="side-panel">
+
+<div class="app-container">
+  <header class="app-header">
     <h1>Instant QR</h1>
-    <div class="minimal-tip">Paste any link, text, or info. Click icons below to copy, paste, reset, edit, export.<br>All controls are always visible—no page scroll needed.</div>
-    <div class="faq-trigger">
-      <button class="faq-toggle" onclick="toggleFAQ()">What makes QR codes work 'forever'? <i class="fa fa-circle-question"></i></button>
+    <div class="minimal-tip">Paste text or a link to generate a static QR code instantly.</div>
+  </header>
+
+  <div class="core-layout">
+    <div class="controls-panel">
+      <div class="control-bar">
+        <input type="text" id="qrtext" placeholder="Paste or type here..." autocomplete="off">
+        <button class="icon-btn" title="Paste from Clipboard" onclick="pasteFromClipboard()"><i class="fa fa-clipboard"></i></button>
+        <button class="icon-btn" title="Clear Input" onclick="clearInput()"><i class="fa fa-eraser"></i></button>
+      </div>
+
+      <div class="opt-row">
+        <label>Size</label>
+        <input type="number" id="qrsize" value="300" min="100" max="1000" step="10">
+        <label>QR</label>
+        <input type="color" id="qrdark" value="#00000">
+        <label>BG</label>
+        <input type="color" id="qrlight" value="#ffffff">
+        <label>No BG</label>
+        <input type="checkbox" id="transparent" style="width: auto;">
+      </div>
+
+      <div class="action-bar">
+        <div class="action-group">
+            <span class="group-label">Download</span>
+            <div class="button-container">
+                <button class="action-btn" onclick="downloadQR('png')"><i class="fa-solid fa-file-image"></i> PNG</button>
+                <button class="action-btn" onclick="downloadQR('svg')"><i class="fa-solid fa-file-code"></i> SVG</button>
+            </div>
+        </div>
+        <div class="action-group">
+            <span class="group-label">Copy</span>
+            <div class="button-container">
+                <button class="action-btn" onclick="copyQR('png')"><i class="fa-solid fa-paste"></i> PNG</button>
+                <button class="action-btn" onclick="copyQR('svg')"><i class="fa-solid fa-clone"></i> SVG</button>
+            </div>
+        </div>
+      </div>
+      <button class="faq-toggle" onclick="toggleFAQ()">What makes these QR codes 'forever'? <i class="fa fa-circle-question"></i></button>
     </div>
-    <div id="faq" class="faq-block">
-      <button class="close-faq" onclick="toggleFAQ()"><i class="fa fa-times"></i></button>
-      <h3>QR Code Durability</h3>
-      <p>
-       Static QR codes work "forever" because they encode the true link or data directly—no 3rd party redirects or paid hosts needed. As long as your URL or info is valid, the QR remains scannable. It's privacy-safe and won't expire.
-      </p>
-      <h3>Tips</h3>
-      <p>
-         • Customize color and size for best scan results.<br>
-         • PNG/SVG download available.<br>
-         • Use icons for copy, paste, and editing.
-      </p>
-      <h3>Why some QRs expire?</h3>
-      <p>
-      Codes that use paid services or redirect URLs may expire if hosting stops, links change, or campaigns end. This tool creates static QR codes that don't expire.
-      </p>
-    </div>
-  </div>
-  <div class="qr-panel">
-    <div class="control-bar">
-      <input type="text" id="qrtext" placeholder="Paste or type here..." autocomplete="off">
-      <button class="icon-btn" title="Paste" onclick="pasteFromClipboard()"><i class="fa fa-clipboard"></i></button>
-      <button class="icon-btn" title="Copy" onclick="copyToClipboard()"><i class="fa fa-copy"></i></button>
-      <button class="icon-btn" title="Clear" onclick="clearInput()"><i class="fa fa-eraser"></i></button>
-      <button class="icon-btn" title="Edit" onclick="editInput()"><i class="fa fa-pen"></i></button>
-    </div>
-    <div class="opt-row">
-      <label>Size</label>
-      <input type="number" id="qrsize" value="220" min="100" max="700">
-      <label>QR</label>
-      <input type="color" id="qrdark" value="#252525">
-      <label>BG</label>
-      <input type="color" id="qrlight" value="#ffffff">
-      <label for="transparent">No BG</label>
-      <input type="checkbox" id="transparent">
-    </div>
-    <div class="download-bar">
-      <button class="icon-btn" title="Download as PNG" onclick="downloadQR_PNG()"><i class="fa fa-image"></i></button>
-      <button class="icon-btn" title="Download as SVG" onclick="downloadQR_SVG()"><i class="fa fa-file-code"></i></button>
-    </div>
-    <div id="qrcode">
-      <div class="empty-state">Your QR code will show here</div>
+
+    <div class="output-panel">
+      <div id="qrcode">
+        <div class="empty-state">Your QR code will appear here</div>
+      </div>
     </div>
   </div>
 </div>
+
+<div id="faq" class="faq-block">
+  <button class="close-faq" onclick="toggleFAQ()"><i class="fa fa-times"></i></button>
+  <h3><i class="fa-solid fa-lock"></i> Permanent & Private</h3>
+  <p>Static QR codes work "forever" because they encode the final data directly. They don't rely on third-party redirect services that can expire or break. Your data is processed only in your browser and is never stored on a server.</p>
+</div>
+
 <script>
-let qrInstance = null;
+let qrCode = null;
+const qrWrap = document.getElementById('qrcode');
 
 function generateQR() {
   const text = document.getElementById('qrtext').value.trim();
   const size = parseInt(document.getElementById('qrsize').value);
-  let colorDark = document.getElementById('qrdark').value;
-  let colorLight = document.getElementById('qrlight').value;
-  if(document.getElementById('transparent').checked) colorLight='rgba(0,0,0,0)';
-  const qrWrap = document.getElementById('qrcode');
+  const colorDark = document.getElementById('qrdark').value;
+  const isTransparent = document.getElementById('transparent').checked;
+  const colorLight = isTransparent ? "#00000000" : document.getElementById('qrlight').value;
+
   qrWrap.innerHTML = '';
+
   if (!text) {
-    qrWrap.innerHTML = `<div class="empty-state">Your QR code will show here</div>`;
+    qrWrap.innerHTML = `<div class="empty-state">Your QR code will appear here</div>`;
+    qrCode = null;
     return;
   }
-  qrInstance = new QRCode(qrWrap, {
-    text: text,
-    width: size,
-    height: size,
-    colorDark: colorDark,
-    colorLight: colorLight,
-    correctLevel: QRCode.CorrectLevel.H
-  });
-}
-function downloadQR_PNG() {
-  const canvas = document.querySelector('#qrcode canvas');
-  if (canvas) {
-    const url = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.download = 'qrcode.png';
-    link.href = url;
-    link.click();
+
+  const qrOptions = {
+      width: size,
+      height: size,
+      data: text,
+      margin: 0,
+      qrOptions: { errorCorrectionLevel: 'H' },
+      dotsOptions: { color: colorDark, type: 'square' },
+      backgroundOptions: { color: colorLight },
+  };
+
+  if (qrCode) {
+      qrCode.update(qrOptions);
+  } else {
+      qrCode = new QRCodeStyling(qrOptions);
+      qrCode.append(qrWrap);
   }
 }
-function downloadQR_SVG() {
-  // Try to find SVG (QRCode.js outputs canvas only by default)
-  const canvas = document.querySelector('#qrcode canvas');
-  if(!canvas) return alert('Generate QR code first!');
-  // Convert canvas to SVG by drawing image onto SVG
-  const imgData = canvas.toDataURL('image/png');
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${canvas.width}' height='${canvas.height}'><image href='${imgData}' width='100%' height='100%'/></svg>`;
-  const blob = new Blob([svg], {type:"image/svg+xml"});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = "qrcode.svg";
-  link.click();
-  setTimeout(()=>URL.revokeObjectURL(url), 800);
+
+function downloadQR(extension) {
+  if (!qrCode) return;
+  qrCode.download({ name: 'qrcode', extension: extension });
 }
-function copyToClipboard() {
-  const el = document.getElementById('qrtext');
-  el.select();
-  try { document.execCommand('copy'); }
-  catch { navigator.clipboard.writeText(el.value); }
-}
-function pasteFromClipboard() {
-  if (navigator.clipboard) {
-    navigator.clipboard.readText().then(text => {
-      document.getElementById('qrtext').value = text;
-      generateQR();
-    });
+
+async function copyQR(type) {
+  if (!qrCode) return;
+  try {
+    if (type === 'png') {
+      const blob = await qrCode.getRawData('png');
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      showCopyFeedback('Copied PNG to clipboard!');
+    } else if (type === 'svg') {
+      const blob = await qrCode.getRawData('svg');
+      const svgText = await blob.text();
+      await navigator.clipboard.writeText(svgText);
+      showCopyFeedback('Copied SVG code to clipboard!');
+    }
+  } catch (err) {
+    console.error('Failed to copy:', err);
   }
 }
+
+function showCopyFeedback(message) {
+    const el = document.createElement('div');
+    el.textContent = message;
+    el.style.cssText = `position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:8px;z-index:100;font-weight:600;opacity:0;transition:opacity 0.3s, bottom 0.3s;`;
+    document.body.appendChild(el);
+    setTimeout(() => { el.style.opacity = 1; el.style.bottom = '30px'; }, 10);
+    setTimeout(() => {
+        el.style.opacity = 0; el.style.bottom = '20px';
+        setTimeout(() => el.remove(), 300);
+    }, 2000);
+}
+
+async function pasteFromClipboard() {
+  try {
+    const text = await navigator.clipboard.readText();
+    document.getElementById('qrtext').value = text;
+    generateQR();
+  } catch (err) { console.error('Failed to paste:', err); }
+}
+
 function clearInput() {
   document.getElementById('qrtext').value = '';
   generateQR();
 }
-function editInput() {
-  document.getElementById('qrtext').focus();
-}
-document.querySelectorAll('#qrtext, #qrsize, #qrdark, #qrlight, #transparent').forEach(e => {
-  e.addEventListener('input', generateQR);
-});
+
 function toggleFAQ() {
   document.getElementById('faq').classList.toggle('show');
 }
-generateQR();
+
+document.querySelectorAll('#qrtext, #qrsize, #qrdark, #qrlight, #transparent').forEach(e => {
+  e.addEventListener('input', generateQR);
+});
+
+document.addEventListener('DOMContentLoaded', generateQR);
 </script>
+
 </body>
 </html>
